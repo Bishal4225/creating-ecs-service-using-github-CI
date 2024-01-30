@@ -1,0 +1,37 @@
+name: ECS Service Creation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Create ECS Service
+      run: |
+        ecs_service_name= bishal_portfolio
+        ecs_cluster_name=lamp-prod
+        ecs_task_definition=bishal_portfolio
+        ecs_desired_count=1  # Set your desired count
+        ecs_launch_type=FARGATE  # Change to EC2 if needed
+
+        aws ecs create-service \
+          --cluster $ecs_cluster_name \
+          --service-name $ecs_service_name \
+          --task-definition $ecs_task_definition \
+          --desired-count $ecs_desired_count \
+          --launch-type $ecs_launch_type \
+          --network-configuration "awsvpcConfiguration={subnets=[subnet-xxxxxx],securityGroups=[sg-xxxxxx],assignPublicIp=ENABLED}"
