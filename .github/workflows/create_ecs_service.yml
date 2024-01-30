@@ -5,21 +5,26 @@ on:
     inputs:
       ecs-region:
         description: 'ECS region'
+        default: "us-east-1"
         required: true
       ecs-service-name:
         description: 'ECS service name'
         required: true
       ecs-cluster-name:
         description: 'ECS cluster name'
+        default: "lamp-prod"
         required: true
       ecs-task-definition-name:
         description: 'ECS task definition name'
+        default: "lamp-prod"
         required: true
       subnet-id:
         description: 'Subnet ID for the network configuration'
+        default: "subnet-004826a00b0f9af0e"
         required: true
       security-group-id:
         description: 'Security Group ID for the network configuration'
+        default: "sg-0e7d8d3c05afb37b9"
         required: true
 
 jobs:
