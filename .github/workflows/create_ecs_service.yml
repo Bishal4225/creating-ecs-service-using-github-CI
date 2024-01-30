@@ -24,7 +24,7 @@ on:
         required: true
       security-group-id:
         description: 'Security Group ID for the network configuration'
-        default: "sg-0e7d8d3c05afb37b9"
+        default: "sg-0dfd938c960bc2ccc"
         required: true
 
 jobs:
