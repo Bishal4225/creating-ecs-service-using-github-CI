@@ -1,9 +1,26 @@
 name: ECS Service Creation
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      ecs-region:
+        description: 'ECS region'
+        required: true
+      ecs-service-name:
+        description: 'ECS service name'
+        required: true
+      ecs-cluster-name:
+        description: 'ECS cluster name'
+        required: true
+      ecs-task-definition-name:
+        description: 'ECS task definition name'
+        required: true
+      subnet-id:
+        description: 'Subnet ID for the network configuration'
+        required: true
+      security-group-id:
+        description: 'Security Group ID for the network configuration'
+        required: true
 
 jobs:
   deploy:
@@ -18,13 +35,13 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+        aws-region: ${{ github.event.inputs.ecs-region }}
 
     - name: Create ECS Service
       run: |
-        ecs_service_name= bishal_portfolio
-        ecs_cluster_name=lamp-prod
-        ecs_task_definition=bishal_portfolio
+        ecs_service_name=${{ github.event.inputs.ecs-service-name }}
+        ecs_cluster_name=${{ github.event.inputs.ecs-cluster-name }}
+        ecs_task_definition=${{ github.event.inputs.ecs-task-definition-name }}
         ecs_desired_count=1  # Set your desired count
         ecs_launch_type=FARGATE  # Change to EC2 if needed
 
@@ -34,4 +51,4 @@ jobs:
           --task-definition $ecs_task_definition \
           --desired-count $ecs_desired_count \
           --launch-type $ecs_launch_type \
-          --network-configuration "awsvpcConfiguration={subnets=[subnet-xxxxxx],securityGroups=[sg-xxxxxx],assignPublicIp=ENABLED}"
+          --network-configuration "awsvpcConfiguration={subnets=[$subnet_id],securityGroups=[$security_group_id],assignPublicIp=ENABLED}"
